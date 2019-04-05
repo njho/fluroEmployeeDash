@@ -1,0 +1,131 @@
+.main-column-container {
+  padding-top: 50px;
+  width: 100%;
+  padding-right: 10vw;
+
+  .main-button {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 20%;
+  }
+}
+
+.login-column {
+  margin-bottom: 5vh;
+  .main-title {
+    font-weight: 500;
+    font-size: 3rem;
+    text-align: left;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .sub-title {
+    color: #3a3e3f;
+    font-size: 2.5rem;
+  }
+
+  .main-brand {
+    color: #23b7d2;
+  }
+}
+
+.main-image {
+  max-height: 75vh;
+  border-radius: 10px;
+  transition: all 0.3s ease 0s;
+  max-width: 100vw;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+  animation: bounce 1s infinite alternate;
+  -webkit-animation: bounce 1s infinite alternate;
+}
+
+.contact-us-image {
+  max-height: 75vh;
+  transition: all 0.3s ease 0s;
+  max-width: 40vw;
+  filter: drop-shadow(30px 15px 0px #c8dbff);
+
+  @media (max-width: 767px) {
+    max-width: 100vw;
+    border-radius: 0;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+  animation: bounce 1s infinite alternate;
+  -webkit-animation: bounce 1s infinite alternate;
+}
+
+.contact-us-block {
+  right: 12vw;
+  width: 20vw;
+  height: 5px;
+  background-color: #1890ff;
+  position: absolute;
+  bottom: -3vh;
+  z-index: -19;
+  @media (max-width: 767px) {
+    display: none;
+  }
+}
+
+.sign-up-image {
+  margin-top: 50px;
+  max-height: 50vh;
+  max-width: 50vw;
+  @media (max-width: 767px) {
+    max-width: 100vw;
+  }
+}
+.sign-up-vertical-block {
+  right: 10vw;
+  width: 40vw;
+  height: 100vh;
+  background-color: #f2f2f2;
+  position: absolute;
+  bottom: -7vh;
+  z-index: -20;
+
+  @media (max-width: 767px) {
+    width: 100vw;
+    max-height: 50vh;
+  }
+}
+
+@keyframes bounce {
+  from {
+    transform: translateY(0px);
+  }
+  to {
+    transform: translateY(-2px);
+  }
+}
+@-webkit-keyframes bounce {
+  from {
+    transform: translateY(0px);
+  }
+  to {
+    transform: translateY(-2px);
+  }
+}
+.image {
+  justify-content: center;
+  align-items: center;
+}
+
+.login-form {
+  width: 100%;
+  text-align: left;
+
+  .login-form-forgot {
+    float: right;
+  }
+
+  .login-form-button {
+    width: 30%;
+  }
+}
