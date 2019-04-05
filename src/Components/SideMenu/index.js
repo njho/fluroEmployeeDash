@@ -25,18 +25,18 @@ class SideMenu extends Component {
                 Submit A Bug Report
               </div>
             </Link>
-            <Link>
+            <Link to='/dashboard/home'>
               <div className='side-menu-item no-select'>
                 <Icon type='audit' />
                 Request A Feature
               </div>
             </Link>
-            <Link>
+            <Link to='/dashboard/home'>
               <div className='side-menu-item no-select'>
                 <Icon type='read' /> Review Documentation
               </div>
             </Link>
-            <Link>
+            <Link to='/dashboard/home'>
               <div className='side-menu-item no-select'>
                 <Icon type='github' /> Github
               </div>
