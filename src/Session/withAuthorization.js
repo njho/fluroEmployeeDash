@@ -14,7 +14,6 @@ const withAuthorization = condition => Component => {
       const { firebase, history } = this.props;
       this.listener = firebase.onAuthUserListener(
         authUser => {
-          console.log(condition);
           if (!condition(authUser)) {
             history.push('/');
           }
@@ -22,7 +21,6 @@ const withAuthorization = condition => Component => {
           // We proceed to the approved route
         },
         () => {
-          console.log('ballsack');
           history.push('/');
         }
       );

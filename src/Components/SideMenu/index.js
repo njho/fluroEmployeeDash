@@ -5,8 +5,6 @@ import { compose } from 'recompose';
 import { AuthUserContext } from '../../Session';
 import { withFirebase } from '../../Firebase';
 
-import './styles.scss';
-
 class SideMenu extends Component {
   navigateTo(location) {
     const { history } = this.props;
@@ -36,11 +34,12 @@ class SideMenu extends Component {
                 <Icon type='read' /> Review Documentation
               </div>
             </Link>
-            <Link to='/dashboard/home'>
-              <div className='side-menu-item no-select'>
-                <Icon type='github' /> Github
-              </div>
-            </Link>
+            <div
+              onClick={() => window.open('https://github.com/Flurotech/')}
+              className='side-menu-item no-select'
+            >
+              <Icon type='github' /> Github
+            </div>
             <div
               className='side-menu-item no-select'
               onClick={() => {

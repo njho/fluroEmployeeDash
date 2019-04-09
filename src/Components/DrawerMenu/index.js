@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { compose } from 'recompose';
+import { Icon } from 'antd';
+
 import { withFirebase } from '../../Firebase';
 import { AuthUserContext } from '../../Session';
-
-import './styles.scss';
 
 class DrawerMenu extends Component {
   navigateTo(location) {
@@ -20,27 +20,25 @@ class DrawerMenu extends Component {
         {authUser => (
           <div className='bottom-drawer-container'>
             <Link onClick={() => onClose()} to='/dashboard/home'>
-              <div className='bottom-drawer-item no-select'>Home</div>
+              <div className='bottom-drawer-item no-select'>
+                <Icon type='security-scan' />
+                Submit A Bug Report
+              </div>
             </Link>{' '}
-            <Link onClick={() => onClose()} to='/dashboard/zones'>
+            <Link onClick={() => onClose()} to='/dashboard/home'>
               <div className='bottom-drawer-item no-select'>
-                Scheduling & Zoning
+                <Icon type='audit' />
+                Request A Feature
               </div>
             </Link>
-            <Link onClick={() => onClose()} to='/dashboard/fleet'>
+            <Link onClick={() => onClose()} to='/dashboard/home'>
               <div className='bottom-drawer-item no-select'>
-                Fleet Management{' '}
+                <Icon type='read' /> Review Documentation
               </div>
             </Link>
-            <Link onClick={() => onClose()} to='/dashboard/accounts'>
+            <Link onClick={() => onClose()} to='/dashboard/home'>
               <div className='bottom-drawer-item no-select'>
-                {' '}
-                Account Management
-              </div>
-            </Link>
-            <Link onClick={() => onClose()} to='/dashboard/payment'>
-              <div className='bottom-drawer-item no-select'>
-                Payment Information
+                <Icon type='github' /> Github
               </div>
             </Link>
             <Link
@@ -50,7 +48,10 @@ class DrawerMenu extends Component {
                 firebase.doSignOut();
               }}
             >
-              <div className='bottom-drawer-item no-select'> Logout</div>
+              <div className='bottom-drawer-item no-select'>
+                <Icon type='logout' />
+                Logout
+              </div>
             </Link>
           </div>
         )}

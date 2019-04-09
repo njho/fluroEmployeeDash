@@ -5,8 +5,6 @@ import { compose } from 'recompose';
 import { AuthUserContext } from '../../Session';
 import { withFirebase } from '../../Firebase';
 
-import './styles.scss';
-
 class Header extends Component {
   render() {
     const { onToggle, firebase } = this.props;

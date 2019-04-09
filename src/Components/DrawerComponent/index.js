@@ -5,8 +5,6 @@ import { compose } from 'recompose';
 import { AuthUserContext } from '../../Session';
 import DrawerMenu from '../DrawerMenu';
 
-import './styles.scss';
-
 class DrawerComponent extends Component {
   render() {
     const { onClose, visible } = this.props;
@@ -15,7 +13,6 @@ class DrawerComponent extends Component {
         {() => (
           <Drawer
             height='100%'
-            title='Menu'
             placement='bottom'
             visible={visible}
             closable

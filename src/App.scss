@@ -1,3 +1,5 @@
+$color-dark-grey: #3d3f42;
+$color-light-grey: #a8a8ad;
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 40vmin;
@@ -36,24 +38,21 @@
 }
 
 h1 {
-  font-weight: 500;
-  font-size: 3rem;
-  text-align: left;
-  text-shadow: 2px 2px 8px rgba(253, 253, 253, 0.8);
+  color: $color-dark-grey !important;
 }
 
-h2 {
-  font-weight: 500;
-  font-size: 2rem;
-  text-align: left;
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
-}
-h3 {
-  color: #7a7a7a !important;
-  font-size: 1.5rem;
-  font-weight: 500 !important;
-  text-align: left;
-}
+// h2 {
+//   font-weight: 500;
+//   font-size: 2rem;
+//   text-align: left;
+//   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+// // }
+// // h3 {
+//   color: #7a7a7a !important;
+//   font-size: 1.5rem;
+//   font-weight: 500 !important;
+//   text-align: left;
+// }
 h4 {
   color: #7a7a7a !important;
   font-weight: 300 !important;
@@ -281,4 +280,118 @@ body {
 
 .dashboard-container {
   min-height: 100vh;
+
+  .menu-icon {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    z-index: 2;
+  }
+}
+
+// Menu-Items
+
+.side-menu-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  align-self: flex-start;
+  background-color: #f1f1f7;
+  text-align: center;
+  padding-top: 40px;
+
+  .side-menu-item {
+    width: 100%;
+    flex-direction: column;
+    margin-bottom: 20px;
+    cursor: pointer;
+    color: $color-light-grey;
+    padding: 10px 0 10px 50px;
+    transition: all 0.3s ease 0s;
+    font-weight: 500;
+    text-align: left;
+    font-size: 0.9rem;
+
+    .active {
+      background-color: #1890ff;
+      color: rgb(255, 255, 255);
+    }
+
+    i {
+      padding-right: 15px;
+    }
+
+    &:hover {
+      color: $color-dark-grey;
+    }
+  }
+  .premium-container {
+    position: absolute;
+    padding: 0 50px;
+    bottom: 50px;
+    width: 100%;
+    text-align: center;
+    color: $color-light-grey;
+
+    .premium-title {
+      color: $color-dark-grey;
+      font-size: 1.1rem;
+    }
+
+    .premium-button {
+      cursor: pointer;
+      border-radius: 50px;
+      color: white;
+      margin: 20px 15px;
+      padding: 10px;
+      background-image: linear-gradient(
+        141deg,
+        #9fb8ad 0%,
+        #1fc8db 51%,
+        #2cb5e8 75%
+      );
+    }
+  }
+}
+
+.ant-drawer-content {
+  background-color: #f1f1f7 !important;
+
+  .ant-drawer-header {
+    background-color: #f1f1f7 !important;
+  }
+
+  .bottom-drawer-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-self: flex-start;
+
+    .bottom-drawer-item {
+      width: 100%;
+      margin-bottom: 20px;
+      cursor: pointer;
+      color: $color-light-grey;
+      padding: 10px 0 10px 20px;
+      transition: all 0.3s ease 0s;
+      font-weight: 500;
+      text-align: left;
+      font-size: 0.9rem;
+
+      i {
+        padding-right: 15px;
+      }
+
+      &:hover {
+        background-color: #1890ff;
+        color: rgb(255, 255, 255);
+      }
+    }
+  }
+}
+
+// Application Content
+.page-container {
+  padding-top: 50px;
 }
