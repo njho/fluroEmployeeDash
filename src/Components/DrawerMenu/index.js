@@ -25,15 +25,20 @@ class DrawerMenu extends Component {
                 Submit A Bug Report
               </div>
             </Link>{' '}
-            <Link onClick={() => onClose()} to='/dashboard/home'>
+            <Link onClick={() => onClose()} to='/dashboard/feature'>
               <div className='bottom-drawer-item no-select'>
                 <Icon type='audit' />
                 Request A Feature
               </div>
             </Link>
-            <Link onClick={() => onClose()} to='/dashboard/home'>
+            <Link onClick={() => onClose()} to='/dashboard/documentation'>
               <div className='bottom-drawer-item no-select'>
                 <Icon type='read' /> Review Documentation
+              </div>
+            </Link>
+            <Link onClick={() => onClose()} to='/dashboard/documentationUpload'>
+              <div className='bottom-drawer-item no-select'>
+                <Icon type='upload' /> Upload a Document
               </div>
             </Link>
             <Link onClick={() => onClose()} to='/dashboard/home'>

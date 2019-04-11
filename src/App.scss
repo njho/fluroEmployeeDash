@@ -395,3 +395,9 @@ body {
 .page-container {
   padding-top: 50px;
 }
+
+.home-container {
+  .no-row-padding {
+    margin-bottom: 0 !important;
+  }
+}

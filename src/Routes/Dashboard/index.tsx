@@ -4,18 +4,7 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { connect } from 'react-redux';
 import SideMenu from '../../Components/SideMenu';
-
-import FleetManagement from './FleetManagement';
-import AddVehicle from './FleetManagement/AddVehicle';
-import EditVehicle from './FleetManagement/EditVehicle';
-
 import Home from './Home';
-
-import AccountManagement from './AccountManagement';
-import AddAccount from './AccountManagement/AddAccount';
-import EditAccount from './AccountManagement/EditAccount';
-import BulkImport from './AccountManagement/BulkImport';
-
 import { withFirebase } from '../../Firebase';
 import { AuthUserContext, withAuthorization } from '../../Session';
 
@@ -23,6 +12,9 @@ import { ICompanyInfo } from './../../types/types';
 import { any } from 'prop-types';
 import { IAuthUser, IDoc } from './../../types/firebaseTypes';
 import DrawerComponent from '../../Components/DrawerComponent';
+import FeatureRequest from './FeatureRequest';
+import Documentation from './Documentation';
+import DocumentationUpload from './DocumentationUpload';
 
 /**
  * OwnProps is passed down from the Parent
@@ -64,25 +56,12 @@ class Dashboard extends Component<Props, State> {
     switch (location) {
       case 'home':
         return <Home />;
-      case 'accounts':
-        if (subRoute === 'newAccount') {
-          return <AddAccount />;
-        }
-        if (subRoute === 'editAccount') {
-          return <EditAccount />;
-        }
-        if (subRoute === 'bulkImport') {
-          return <BulkImport />;
-        }
-        return <AccountManagement />;
-      case 'fleet':
-        if (subRoute === 'newVehicle') {
-          return <AddVehicle />;
-        }
-        if (subRoute === 'editVehicle') {
-          return <EditVehicle />;
-        }
-        return <FleetManagement />;
+      case 'feature':
+        return <FeatureRequest />;
+      case 'documentation':
+        return <Documentation />;
+      case 'documentationUpload':
+        return <DocumentationUpload />;
 
       default:
         return null;

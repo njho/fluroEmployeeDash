@@ -98,45 +98,37 @@ class HomeForm extends Component<Props, State> {
 
     return (
       <div className='home-container'>
-        <h1>Submit a Bug Report</h1>
+        <h1>Upload a Document</h1>
         <Form onSubmit={this.handleSubmit}>
           <QueueAnim type='bottom'>
             <Row>
-              <Col xs={{ span: 11 }} lg={{ span: 11, offset: 0 }}>
-                <Form.Item label='Name' className='no-row-padding'>
-                  {getFieldDecorator('name', {
+              <Col xs={{ span: 24 }} lg={{ span: 24 }}>
+                <Form.Item label='Title' className='no-row-padding'>
+                  {getFieldDecorator('title', {
                     rules: [
                       {
                         required: true,
-                        message: 'Please provide us your name!'
+                        message: 'Please provide a document title!'
                       }
                     ]
-                  })(
-                    <Input prefix={<Icon type='user' />} placeholder='Name' />
-                  )}
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 12, offset: 1 }} lg={{ span: 12, offset: 1 }}>
-                <Form.Item label='E-mail' className='no-row-padding'>
-                  {getFieldDecorator('email', {
-                    rules: [
-                      { required: true, message: 'Please provide your email!' }
-                    ]
-                  })(
-                    <Input
-                      prefix={<Icon type='mail' />}
-                      type='email'
-                      placeholder='E-mail'
-                    />
-                  )}
+                  })(<Input placeholder='Document Title' />)}
                 </Form.Item>
               </Col>
             </Row>
-            <Form.Item label='Please describe the issue'>
-              <TextArea
-                rows={4}
-                placeholder='How did this occur? What events lead to the bug?'
-              />
+            <Form.Item label='Please describe the document'>
+              {getFieldDecorator('description', {
+                rules: [
+                  {
+                    required: true,
+                    message: 'Please provide a document description!'
+                  }
+                ]
+              })(
+                <TextArea
+                  rows={4}
+                  placeholder='These keywords will be used within the search.'
+                />
+              )}
             </Form.Item>
             <Dragger {...props}>
               <p className='ant-upload-drag-icon'>
