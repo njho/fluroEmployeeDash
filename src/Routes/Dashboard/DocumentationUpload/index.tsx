@@ -1,5 +1,15 @@
 import React, { Component } from 'react';
-import { Form, Button, Icon, Input, Upload, message, Row, Col } from 'antd';
+import {
+  Form,
+  Button,
+  Icon,
+  Input,
+  Upload,
+  message,
+  Row,
+  Col,
+  notification
+} from 'antd';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import QueueAnim from 'rc-queue-anim';
@@ -15,6 +25,12 @@ import {
 import { IDoc } from '../../../types/firebaseTypes';
 import { RouteComponentProps } from 'react-router';
 import { FormComponentProps } from 'antd/lib/form';
+import { RcFile } from 'antd/lib/upload/interface';
+import {
+  getFileType,
+  checkFileSize,
+  fileMimeMap
+} from '../../../types/fileTypes';
 /**
  * OwnProps is passed down from the Parent
  */
@@ -33,7 +49,10 @@ interface DispatchProps {}
 /**
  * Local State
  */
-interface State {}
+interface State {
+  data: any;
+  uploading: boolean;
+}
 /**
  * Combined props
  */
@@ -41,24 +60,14 @@ type Props = OwnProps & DispatchProps & StateProps & FormComponentProps;
 
 const { TextArea } = Input;
 const Dragger = Upload.Dragger;
-const props = {
-  name: 'file',
-  multiple: true,
-  action: '//jsonplaceholder.typicode.com/posts/',
-  onChange(info: any) {
-    const status = info.file.status;
-    if (status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  }
+const dummyRequest = ({ file, onSuccess }: any) => {
+  setTimeout(() => {
+    onSuccess('ok');
+  }, 0);
 };
 
 class HomeForm extends Component<Props, State> {
+  state = { data: { name: null }, uploading: false };
   async componentDidMount() {
     const { firebase, companyInfo } = this.props;
 
@@ -71,20 +80,79 @@ class HomeForm extends Component<Props, State> {
     }
   }
 
+  successNotification = (message: string) => {
+    notification.success({
+      message
+    });
+  };
+
+  loaderProps = {
+    accept: '.pdf',
+    data: (data: any) => {
+      console.log(data);
+      this.setState({ data: data });
+    },
+    customRequest: (thing: any) => dummyRequest(thing),
+    name: 'file',
+    showUploadList: false
+  };
+
   handleSubmit = (e: any) => {
     const { firebase, history } = this.props;
     e.preventDefault();
     const { form } = this.props;
     const { validateFields } = form;
     validateFields(async (err, values) => {
+      console.log(values);
       if (!err) {
         try {
-          console.log('in the try');
-          await firebase.doSignInWithEmailAndPassword(
-            values.userName,
-            values.password
+          this.setState({ uploading: true });
+          const { firebase } = this.props;
+          const { data } = this.state;
+          let url: string;
+          let uploadTask = firebase
+            .storageAccess()
+            .ref(`/${data.name}`)
+            .put(data);
+
+          uploadTask.on(
+            'state_changed',
+            function(snapshot: any) {
+              var progress =
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log('Upload is ' + progress + '% done');
+              switch (snapshot.state) {
+                case 'paused': // or 'paused'
+                  console.log('Upload is paused');
+                  break;
+                case 'running': // or 'running'
+                  console.log('Upload is running');
+                  break;
+              }
+            },
+            function(error: any) {
+              // Handle unsuccessful uploads
+            },
+            async () => {
+              uploadTask.snapshot.ref
+                .getDownloadURL()
+                .then(async (downloadUrl: string) => {
+                  url: downloadUrl;
+                  console.log('File available at', downloadUrl);
+                  await firebase
+                    .firestoreAccess()
+                    .collection('documents')
+                    .add({
+                      title: values.title,
+                      description: values.description,
+                      downloadUrl
+                    });
+                  this.successNotification('Document successfully uploaded!');
+                  form.resetFields();
+                  this.setState({ data: { name: null }, uploading: false });
+                });
+            }
           );
-          history.push('/dashboard/home');
         } catch (error) {
           console.log(error);
         }
@@ -95,11 +163,12 @@ class HomeForm extends Component<Props, State> {
   render() {
     const { form } = this.props;
     const { getFieldDecorator } = form;
+    const { data, uploading } = this.state;
 
     return (
       <div className='home-container'>
         <h1>Upload a Document</h1>
-        <Form onSubmit={this.handleSubmit}>
+        <Form autoComplete='off' onSubmit={this.handleSubmit}>
           <QueueAnim type='bottom'>
             <Row>
               <Col xs={{ span: 24 }} lg={{ span: 24 }}>
@@ -111,7 +180,7 @@ class HomeForm extends Component<Props, State> {
                         message: 'Please provide a document title!'
                       }
                     ]
-                  })(<Input placeholder='Document Title' />)}
+                  })(<Input autoComplete='off' placeholder='Document Title' />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -126,34 +195,44 @@ class HomeForm extends Component<Props, State> {
               })(
                 <TextArea
                   rows={4}
+                  autoComplete='off'
                   placeholder='These keywords will be used within the search.'
                 />
               )}
             </Form.Item>
-            <Dragger {...props}>
-              <p className='ant-upload-drag-icon'>
-                <Icon type='inbox' />
-              </p>
-              <p className='ant-upload-text'>
-                Click or drag file to this area to upload
-              </p>
-              <p className='ant-upload-hint'>
-                Support for a single or bulk upload. Strictly prohibit from
-                uploading company data or other band files
-              </p>
-            </Dragger>
-            ,
+            {data.name ? (
+              <span
+                style={{
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+              >
+                <Icon style={{ fontSize: '30px' }} type='inbox' /> {' - '}{' '}
+                {data.name}
+              </span>
+            ) : (
+              <Dragger {...this.loaderProps}>
+                <p className='ant-upload-drag-icon'>
+                  <Icon type='file-protect' /> {data.name}
+                </p>
+                <p className='ant-upload-text'>
+                  Click or drag file to this area to upload
+                </p>
+              </Dragger>
+            )}
+
             <Form.Item
               style={{ textAlign: 'right', width: '100%', marginTop: '20px' }}
             >
               <Button
+                loading={uploading}
                 style={{ backgroundColor: '#2cb5e8', border: 'none' }}
                 type='primary'
                 size='large'
                 htmlType='submit'
               >
                 <Icon type='security-scan' />
-                Submit Report
+                Submit Document
                 <Icon type='arrow-right' style={{ paddingLeft: '3px' }} />
               </Button>
             </Form.Item>

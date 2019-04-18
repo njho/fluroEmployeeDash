@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withFirebase } from '../../Firebase';
 
-class Login extends Component {
+class ForgotPasswordForm extends Component {
   handleSubmit = e => {
     const { form } = this.props;
     const { firebase, history } = this.props;
@@ -13,10 +13,7 @@ class Login extends Component {
     validateFields(async (err, values) => {
       if (!err) {
         try {
-          await firebase.doSignInWithEmailAndPassword(
-            values.email,
-            values.password
-          );
+          await firebase.sendPasswordReset(values.email);
           history.push('/dashboard/home');
         } catch (error) {
           console.log(error);
@@ -30,6 +27,9 @@ class Login extends Component {
     const { getFieldDecorator } = form;
     return (
       <Form onSubmit={this.handleSubmit} className='login-form'>
+        <span style={{ color: 'white', marginnTop: '-20px' }}>
+          Please enter your email.
+        </span>
         <Form.Item>
           {getFieldDecorator('email', {
             rules: [{ required: true, message: 'Please input your email!' }]
@@ -40,19 +40,9 @@ class Login extends Component {
             />
           )}
         </Form.Item>
-        <Form.Item>
-          {getFieldDecorator('password', {
-            rules: [{ required: true, message: 'Please input your Password!' }]
-          })(
-            <Input
-              prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
-              type='password'
-              placeholder='Password'
-            />
-          )}
-        </Form.Item>
+
         <Button type='primary' htmlType='submit' className='login-form-button'>
-          Log In
+          Reset Password
         </Button>
         <br />
       </Form>
@@ -60,9 +50,11 @@ class Login extends Component {
   }
 }
 
-const LoginForm = Form.create({ name: 'horizontal_login' })(Login);
+const ForgotPassword = Form.create({ name: 'horizontal_login' })(
+  ForgotPasswordForm
+);
 
 export default compose(
   withRouter,
   withFirebase
-)(LoginForm);
+)(ForgotPassword);

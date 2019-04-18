@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col, Button, Icon } from 'antd';
 import './Public.scss';
 import QueueAnim from 'rc-queue-anim';
-import Login from './Login';
+import LoginContainer from './LoginContainer';
 import { UNSPLASH_WEED } from '../../Constants';
 
 class Public extends Component {
@@ -37,7 +37,7 @@ class Public extends Component {
             className='login-column'
           >
             <QueueAnim type='bottom' delay={[500]}>
-              {loginVisible && <Login key='a' />}
+              {loginVisible && <LoginContainer key='a' />}
             </QueueAnim>
           </Col>
           <Col xs={{ span: 0, offset: 0 }} lg={{ span: 9, offset: 0 }} />

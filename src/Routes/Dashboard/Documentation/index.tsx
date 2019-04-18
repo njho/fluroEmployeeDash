@@ -61,6 +61,10 @@ class Documentation extends Component<Props, State> {
     return (
       <div className='home-container'>
         <h1>FluroTech Documentation Search</h1>
+        <h3>
+          You can find all public FluroTech documentation and associated user
+          manuals here.
+        </h3>
         <DocumentationSearch />
         <br />
       </div>

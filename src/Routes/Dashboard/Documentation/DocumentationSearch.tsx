@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { Input, Row, Col } from 'antd';
+import { Input, List, Col } from 'antd';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { withFirebase } from '../../../Firebase';
 import { compose } from 'recompose';
 import { IRootState, ICompanyInfo } from '../../../types/types';
-import { IDoc } from '../../../types/firebaseTypes';
 import { RouteComponentProps } from 'react-router';
 import { FormComponentProps } from 'antd/lib/form';
+import { InstantSearch, SearchBox, Hits } from 'react-instantsearch-dom';
+
 /**
  * OwnProps is passed down from the Parent
  */
@@ -40,7 +41,31 @@ class DocumentationSearch extends Component<Props, State> {
 
     return (
       <div className='home-container'>
-        <Input addonBefore='Search by Title, ID, or Description' />
+        <InstantSearch
+          apiKey='57e1312f4aa7cf8e2b54b3ddb323fe03'
+          appId='F2NFPNAZVH'
+          indexName='documents'
+        >
+          <SearchBox
+            translations={{ placeholder: 'Search by Title or Description' }}
+          />
+          <br />
+          <Hits
+            hitComponent={(hit: any) => {
+              return (
+                <div
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => window.open(hit.hit.downloadUrl)}
+                >
+                  <h3> {hit.hit.title}</h3>
+                  <div className='disabled' style={{ fontSize: '0.8rem' }}>
+                    {hit.hit.description}
+                  </div>
+                </div>
+              );
+            }}
+          />
+        </InstantSearch>
       </div>
     );
   }

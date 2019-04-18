@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Button, Icon, Input, Row, Col } from 'antd';
+import { Form, Button, Icon, Input, Row, Col, notification } from 'antd';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import QueueAnim from 'rc-queue-anim';
@@ -28,7 +28,9 @@ interface DispatchProps {}
 /**
  * Local State
  */
-interface State {}
+interface State {
+  loading: boolean;
+}
 /**
  * Combined props
  */
@@ -37,33 +39,37 @@ type Props = OwnProps & DispatchProps & StateProps & FormComponentProps;
 const { TextArea } = Input;
 
 class FeatureRequestForm extends Component<Props, State> {
-  async componentDidMount() {
-    const { firebase, companyInfo } = this.props;
+  state = {
+    loading: false
+  };
 
-    if (companyInfo.company.companyId) {
-      let response = await firebase
-        .companySubscription(companyInfo.company.companyId)
-        .get();
-      if (response.exists) {
-      }
-    }
-  }
+  successNotification = (message: string) => {
+    notification.success({
+      message
+    });
+  };
 
   handleSubmit = (e: any) => {
     const { firebase, history } = this.props;
-    console.log('asdfasdf');
     e.preventDefault();
     const { form } = this.props;
     const { validateFields } = form;
     validateFields(async (err, values) => {
       if (!err) {
         try {
-          console.log('in the try');
-          await firebase.doSignInWithEmailAndPassword(
-            values.userName,
-            values.password
-          );
-          history.push('/dashboard/home');
+          this.setState({ loading: true });
+          console.log({ values });
+          await firebase
+            .firestoreAccess()
+            .collection('featureRequests')
+            .add({
+              ...values,
+              active: true
+            });
+          this.setState({ loading: false });
+          this.successNotification('Feature Request Submitted!');
+
+          form.resetFields();
         } catch (error) {
           console.log(error);
         }
@@ -73,6 +79,7 @@ class FeatureRequestForm extends Component<Props, State> {
 
   render() {
     const { form } = this.props;
+    const { loading } = this.state;
     const { getFieldDecorator } = form;
 
     return (
@@ -111,16 +118,23 @@ class FeatureRequestForm extends Component<Props, State> {
               </Col>
             </Row>
             <Form.Item label='Please describe your feature request'>
-              <TextArea
-                rows={4}
-                placeholder='What would you like integrated and why is this important?'
-              />
+              {getFieldDecorator('description', {
+                rules: [
+                  { required: true, message: 'Please provide your email!' }
+                ]
+              })(
+                <TextArea
+                  rows={4}
+                  placeholder='What would you like integrated and why is this important?'
+                />
+              )}
             </Form.Item>
 
             <Form.Item
               style={{ textAlign: 'right', width: '100%', marginTop: '20px' }}
             >
               <Button
+                loading={loading}
                 style={{ backgroundColor: '#2cb5e8', border: 'none' }}
                 type='primary'
                 size='large'

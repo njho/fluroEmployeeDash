@@ -1,6 +1,7 @@
 import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
+import 'firebase/storage';
 
 const config = {
   apiKey: 'AIzaSyDla9YTbY-xWYHq2MTPx7ZD-8QWfWYReG8',
@@ -15,8 +16,8 @@ class Firebase {
   constructor() {
     app.initializeApp(config);
     this.auth = app.auth();
-    // this.db = app.database();
     this.firestore = app.firestore();
+    this.storage = app.storage();
   }
 
   // *** Auth API ***
@@ -26,6 +27,8 @@ class Firebase {
 
   doSignInWithEmailAndPassword = (email, password) =>
     this.auth.signInWithEmailAndPassword(email, password);
+
+  sendPasswordReset = email => this.auth.sendPasswordResetEmail(email);
 
   doSignOut = () => this.auth.signOut();
 
@@ -215,7 +218,9 @@ class Firebase {
       .doc(companyId)
       .collection('stops');
 
-  // firestore = () => this.firestore;
+  firestoreAccess = () => this.firestore;
+
+  storageAccess = () => this.storage;
 }
 
 export default Firebase;

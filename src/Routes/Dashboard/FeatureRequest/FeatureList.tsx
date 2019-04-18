@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { List, Tag } from 'antd';
+import { List, Tag, Card } from 'antd';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import QueueAnim from 'rc-queue-anim';
@@ -9,6 +9,7 @@ import { Dispatch } from 'redux';
 import { IRootState, ICompanyInfo } from '../../../types/types';
 import { RouteComponentProps } from 'react-router';
 import { FormComponentProps } from 'antd/lib/form';
+import Item from 'antd/lib/list/Item';
 
 /**
  * OwnProps is passed down from the Parent
@@ -28,32 +29,53 @@ interface DispatchProps {}
 /**
  * Local State
  */
-interface State {}
+interface State {
+  featureRequests: any[];
+  activeRequestCounts: number;
+  focusedRequest: { description: string; email: string; name: string };
+}
 /**
  * Combined props
  */
 type Props = OwnProps & DispatchProps & StateProps & FormComponentProps;
 
-const featureRequests = [
-  {
-    name: 'Add additional information to...'
-  },
-  {
-    name: 'Add this to the interface...'
-  }
-];
-
 class FeatureList extends Component<Props, State> {
+  state = {
+    featureRequests: [],
+    activeRequestCounts: 0,
+    focusedRequest: {
+      name: '',
+      email: '',
+      description: ''
+    }
+  };
+
   async componentDidMount() {
     const { firebase, companyInfo } = this.props;
 
-    if (companyInfo.company.companyId) {
-      let response = await firebase
-        .companySubscription(companyInfo.company.companyId)
-        .get();
-      if (response.exists) {
-      }
-    }
+    //@ts-ignore
+    this.listenerRef = firebase
+      .firestoreAccess()
+      .collection('featureRequests')
+      .onSnapshot((querySnapshot: any) => {
+        let featureRequests: any[] = [];
+        let activeRequestCounts = 0;
+        querySnapshot.forEach((doc: any) => {
+          featureRequests.push(doc.data());
+          if (doc.data().active) {
+            activeRequestCounts += 1;
+          }
+        });
+        this.setState({
+          featureRequests,
+          activeRequestCounts
+        });
+      });
+  }
+
+  componentWillUnmount() {
+    //@ts-ignore
+    this.listenerRef();
   }
 
   handleSubmit = (e: any) => {
@@ -75,24 +97,43 @@ class FeatureList extends Component<Props, State> {
   };
 
   render() {
-    const { form } = this.props;
-
+    const { featureRequests, activeRequestCounts, focusedRequest } = this.state;
+    console.log(activeRequestCounts);
     return (
-      <QueueAnim type={'left'} delay={[500, 0]}>
-        {featureRequests.length > 0 &&
-          featureRequests.map((request: any) => {
-            return (
-              <List.Item
-                key={request.name}
-                style={{ textAlign: 'left' }}
-                className='fleet-list-item'
-              >
-                <List.Item.Meta title={`${request.name} `} />
-                <Tag color='green'>Active</Tag>
-              </List.Item>
-            );
-          })}
-      </QueueAnim>
+      activeRequestCounts > 0 && (
+        <>
+          <h2>Active Feature Requests</h2>
+          <QueueAnim type={'left'} delay={[500, 0]}>
+            {featureRequests.length > 0 &&
+              featureRequests.map((request: any) => {
+                if (request.active) {
+                  return (
+                    <List.Item
+                      key={request.description}
+                      onClick={() => this.setState({ focusedRequest: request })}
+                      style={{ textAlign: 'left', cursor: 'pointer' }}
+                      className='fleet-list-item'
+                    >
+                      <List.Item.Meta
+                        title={`${request.description &&
+                          request.description.substr(0, 60)}... `}
+                      />
+                      <Tag color='green'>Active</Tag>
+                    </List.Item>
+                  );
+                }
+              })}
+          </QueueAnim>
+          <br />
+          {focusedRequest.description !== '' ? (
+            <Card>
+              <h4>{focusedRequest.description}</h4>
+              <Tag>Email: {focusedRequest.email}</Tag>
+              <Tag>Name: {focusedRequest.name}</Tag>
+            </Card>
+          ) : null}
+        </>
+      )
     );
   }
 }

@@ -82,7 +82,7 @@ h4 {
       border: none;
       .login-image {
         width: 100%;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
       }
 
       .login-form {
@@ -280,7 +280,7 @@ body {
 
 .dashboard-container {
   min-height: 100vh;
-
+  background-color: white;
   .menu-icon {
     position: absolute;
     right: 20px;
@@ -400,4 +400,8 @@ body {
   .no-row-padding {
     margin-bottom: 0 !important;
   }
+}
+
+.disabled {
+  color: $color-light-grey;
 }
