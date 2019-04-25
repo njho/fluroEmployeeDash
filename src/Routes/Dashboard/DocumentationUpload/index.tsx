@@ -19,8 +19,7 @@ import { Dispatch } from 'redux';
 import {
   IRootState,
   ICompanyInfo,
-  ICompanyCreditCard,
-  ICompanySubscription
+  ICompanyCreditCard
 } from '../../../types/types';
 import { IDoc } from '../../../types/firebaseTypes';
 import { RouteComponentProps } from 'react-router';
@@ -68,17 +67,6 @@ const dummyRequest = ({ file, onSuccess }: any) => {
 
 class HomeForm extends Component<Props, State> {
   state = { data: { name: null }, uploading: false };
-  async componentDidMount() {
-    const { firebase, companyInfo } = this.props;
-
-    if (companyInfo.company.companyId) {
-      let response = await firebase
-        .companySubscription(companyInfo.company.companyId)
-        .get();
-      if (response.exists) {
-      }
-    }
-  }
 
   successNotification = (message: string) => {
     notification.success({

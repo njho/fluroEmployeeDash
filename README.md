@@ -1,14 +1,3 @@
-# Sure Fuel Dashboard Documentation
-
-Workable credentials:
-username: nj.ho@hotmail.com
-password: surefuel
-
-This project was bootstraped with `create-react-app` and `antd`.
-
-- https://github.com/facebook/create-react-app
-- https://ant.design/
-
 ## Developer Setup
 
 - Use VSCode as an IDE
@@ -70,15 +59,3 @@ const condition = authUser => !!authUser;
 
 export default withRouter(withAuthorization(condition)(Dashboard));
 ```
-
-## How does the Dashboard know which Operator it Represents?
-
-With each `authUser` identified, we tie an `companyId` with it. For a user to be able to use the dashboard, they must have:
-
-1. An `companyId` associated with their custom claims
-2. A `role` identifying the association they have with the company
-3. A `isPartOfCompany` flag
-
-## Where's the first location where I find the company information
-
-Check the `Dashboard` component! `companyInformation` will provide all the information for the respective company.

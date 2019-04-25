@@ -67,10 +67,8 @@ class Feature extends Component<Props, State> {
         <br />
         <FeatureRequestForm />
         <br />
+        <br />
         <FeatureList />
-        <br /> <br />
-        <br />
-        <br />
       </div>
     );
   }

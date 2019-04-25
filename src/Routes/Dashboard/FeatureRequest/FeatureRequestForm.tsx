@@ -83,71 +83,65 @@ class FeatureRequestForm extends Component<Props, State> {
     const { getFieldDecorator } = form;
 
     return (
-      <div className='home-container'>
-        <Form onSubmit={this.handleSubmit}>
-          <QueueAnim type='bottom'>
-            <Row>
-              <Col xs={{ span: 11 }} lg={{ span: 11, offset: 0 }}>
-                <Form.Item label='Name' className='no-row-padding'>
-                  {getFieldDecorator('name', {
-                    rules: [
-                      {
-                        required: true,
-                        message: 'Please provide us your name!'
-                      }
-                    ]
-                  })(
-                    <Input prefix={<Icon type='user' />} placeholder='Name' />
-                  )}
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 12, offset: 1 }} lg={{ span: 12, offset: 1 }}>
-                <Form.Item label='E-mail' className='no-row-padding'>
-                  {getFieldDecorator('email', {
-                    rules: [
-                      { required: true, message: 'Please provide your email!' }
-                    ]
-                  })(
-                    <Input
-                      prefix={<Icon type='mail' />}
-                      type='email'
-                      placeholder='E-mail'
-                    />
-                  )}
-                </Form.Item>
-              </Col>
-            </Row>
-            <Form.Item label='Please describe your feature request'>
-              {getFieldDecorator('description', {
-                rules: [
-                  { required: true, message: 'Please provide your email!' }
-                ]
-              })(
-                <TextArea
-                  rows={4}
-                  placeholder='What would you like integrated and why is this important?'
-                />
-              )}
-            </Form.Item>
+      <Form onSubmit={this.handleSubmit}>
+        <QueueAnim type='bottom'>
+          <Row>
+            <Col xs={{ span: 11 }} lg={{ span: 11, offset: 0 }}>
+              <Form.Item label='Name' className='no-row-padding'>
+                {getFieldDecorator('name', {
+                  rules: [
+                    {
+                      required: true,
+                      message: 'Please provide us your name!'
+                    }
+                  ]
+                })(<Input prefix={<Icon type='user' />} placeholder='Name' />)}
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 12, offset: 1 }} lg={{ span: 12, offset: 1 }}>
+              <Form.Item label='E-mail' className='no-row-padding'>
+                {getFieldDecorator('email', {
+                  rules: [
+                    { required: true, message: 'Please provide your email!' }
+                  ]
+                })(
+                  <Input
+                    prefix={<Icon type='mail' />}
+                    type='email'
+                    placeholder='E-mail'
+                  />
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Form.Item label='Please describe your feature request'>
+            {getFieldDecorator('description', {
+              rules: [{ required: true, message: 'Please provide your email!' }]
+            })(
+              <TextArea
+                rows={4}
+                placeholder='What would you like integrated and why is this important?'
+              />
+            )}
+          </Form.Item>
 
-            <Form.Item
-              style={{ textAlign: 'right', width: '100%', marginTop: '20px' }}
+          <Form.Item
+            style={{ textAlign: 'right', width: '100%', marginTop: '20px' }}
+          >
+            <Button
+              loading={loading}
+              style={{ backgroundColor: '#2cb5e8', border: 'none' }}
+              type='primary'
+              size='large'
+              htmlType='submit'
             >
-              <Button
-                loading={loading}
-                style={{ backgroundColor: '#2cb5e8', border: 'none' }}
-                type='primary'
-                size='large'
-                htmlType='submit'
-              >
-                <Icon type='audit' />
-                Submit Feature Request
-                <Icon type='arrow-right' style={{ paddingLeft: '3px' }} />
-              </Button>
-            </Form.Item>
-          </QueueAnim>
-        </Form>
-      </div>
+              <Icon type='audit' />
+              Submit Feature Request
+              <Icon type='arrow-right' style={{ paddingLeft: '3px' }} />
+            </Button>
+          </Form.Item>
+        </QueueAnim>
+      </Form>
     );
   }
 }

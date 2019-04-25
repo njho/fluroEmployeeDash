@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import { withFirebase } from '../../../Firebase';
 import { Dispatch } from 'redux';
-import { IRootState, ICompanyInfo } from '../../../types/types';
+import { IRootState } from '../../../types/types';
 import { RouteComponentProps } from 'react-router';
 import { FormComponentProps } from 'antd/lib/form';
 import DocumentationSearch from './DocumentationSearch';
@@ -17,7 +17,6 @@ interface OwnProps extends RouteComponentProps {}
  */
 interface StateProps {
   firebase: any;
-  companyInfo: ICompanyInfo;
 }
 /**
  * Dispatched Props from Redux
@@ -72,9 +71,7 @@ class Documentation extends Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: IRootState): any => ({
-  companyInfo: state.company
-});
+const mapStateToProps = (state: IRootState): any => ({});
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({});
 

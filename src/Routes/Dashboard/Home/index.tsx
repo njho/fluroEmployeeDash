@@ -72,18 +72,6 @@ const dummyRequest = ({ file, onSuccess }: any) => {
 class HomeForm extends Component<Props, State> {
   state = { data: { name: null }, uploading: false };
 
-  async componentDidMount() {
-    const { firebase, companyInfo } = this.props;
-
-    if (companyInfo.company.companyId) {
-      let response = await firebase
-        .companySubscription(companyInfo.company.companyId)
-        .get();
-      if (response.exists) {
-      }
-    }
-  }
-
   successNotification = (message: string) => {
     notification.success({
       message
@@ -261,6 +249,8 @@ class HomeForm extends Component<Props, State> {
             </Form.Item>
           </QueueAnim>
         </Form>
+        <br />
+        <br />
         <Row>
           <Col span={24}>
             <BugList />

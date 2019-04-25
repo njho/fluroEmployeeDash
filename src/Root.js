@@ -7,7 +7,6 @@ import store from './store';
 import SessionHOC from './SessionHOC';
 
 import Public from './Routes/Public';
-import Signup from './Routes/Signup';
 import Dashboard from './Routes/Dashboard';
 
 class Root extends Component {
@@ -18,7 +17,6 @@ class Root extends Component {
           <SessionHOC>
             <Layout>
               <Route exact path={'/'} component={Public} />
-              <Route exact path={'/signup'} component={Signup} />
               <Route
                 path='/dashboard/:dashboardLocation/:subRoute?/:identifier?'
                 component={Dashboard}

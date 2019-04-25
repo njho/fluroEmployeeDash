@@ -19,12 +19,6 @@ class Header extends Component {
               </Menu.Item>
             </Menu>
             <div>
-              {authUser ? null : (
-                <div className='menu-right-item no-select'>
-                  {' '}
-                  <Link to='/signup'>Sign Up</Link>
-                </div>
-              )}
               {authUser ? (
                 <Icon
                   onClick={() => onToggle()}

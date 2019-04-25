@@ -41,7 +41,13 @@ class DrawerMenu extends Component {
                 <Icon type='upload' /> Upload a Document
               </div>
             </Link>
-            <Link onClick={() => onClose()} to='/dashboard/home'>
+            <Link
+              onClick={() => {
+                onClose();
+                window.open('https://github.com/Flurotech/');
+              }}
+              to='/dashboard/home'
+            >
               <div className='bottom-drawer-item no-select'>
                 <Icon type='github' /> Github
               </div>

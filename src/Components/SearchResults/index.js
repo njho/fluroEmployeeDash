@@ -40,7 +40,7 @@ class SearchResults extends Component {
                   <List.Item
                     key={item.id}
                     style={{ textAlign: 'left' }}
-                    className='fleet-list-item'
+                    className=''
                     onClick={() => {
                       console.log(item);
                       callback(item[titleKey], item.id, item.name);
@@ -62,9 +62,7 @@ class SearchResults extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  companyInfo: state.company
-});
+const mapStateToProps = state => ({});
 
 const mapDispatchToProps = dispatch => ({
   updateCompanyEmployees: value => {

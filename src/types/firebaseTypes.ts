@@ -7,7 +7,6 @@ export interface IAuthUser {
     email_verified: boolean;
     exp: number;
     iat: number;
-    isPartOfCompany: boolean;
     role: string;
     user_id: string;
   };

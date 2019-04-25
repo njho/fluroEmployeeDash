@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { List, Tag, Card, Icon } from 'antd';
+import { List, Tag, Card, Icon, Row, Divider } from 'antd';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import QueueAnim from 'rc-queue-anim';
@@ -10,6 +10,7 @@ import { IRootState, ICompanyInfo } from '../../../types/types';
 import { RouteComponentProps } from 'react-router';
 import { FormComponentProps } from 'antd/lib/form';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 
 /**
  * OwnProps is passed down from the Parent
@@ -109,48 +110,56 @@ class BugList extends Component<Props, State> {
     return (
       activeRequestCounts > 0 && (
         <>
-          <h2>Active Bugs</h2>
-          <QueueAnim type={'left'} delay={[500, 0]}>
-            {bugReports.length > 0 &&
-              bugReports.map((request: any) => {
-                if (request.active) {
-                  return (
-                    <List.Item
-                      key={request.description}
-                      onClick={() => this.setState({ focusedRequest: request })}
-                      style={{ textAlign: 'left', cursor: 'pointer' }}
-                      className='fleet-list-item'
-                    >
-                      <List.Item.Meta
-                        title={`${request.description &&
-                          request.description.substr(0, 60)}... `}
-                      />
-                      <Tag color='green'>Active</Tag>
-                    </List.Item>
-                  );
-                }
-              })}
-          </QueueAnim>
-          <br />
-          {focusedRequest.description !== '' ? (
-            <Card>
-              <Tag color='blue'>Email: {focusedRequest.email}</Tag>
-              <Tag color='blue'>Name: {focusedRequest.name}</Tag>
-              <Tag color='green'>
-                {moment(focusedRequest.timestamp).format('MMM-DD-YYYY HH:mm')}
-              </Tag>
-              <br /> <br />
-              <h4>{focusedRequest.description}</h4>
-              {focusedRequest.downloadUrl && (
-                <p
-                  style={{ cursor: 'pointer', marginBottom: 0 }}
-                  onClick={() => window.open(focusedRequest.downloadUrl)}
-                >
-                  <Icon type='file-protect' /> File Uploaded
-                </p>
-              )}
-            </Card>
-          ) : null}
+          <Card>
+            <h2>Active Bugs</h2>
+            <QueueAnim type={'left'} delay={[500, 0]}>
+              {bugReports.length > 0 &&
+                bugReports.map((request: any) => {
+                  if (request.active) {
+                    return (
+                      <List.Item
+                        key={request.description}
+                        onClick={() =>
+                          this.setState({ focusedRequest: request })
+                        }
+                        style={{ textAlign: 'left', cursor: 'pointer' }}
+                        className=''
+                      >
+                        <List.Item.Meta
+                          title={`${request.description &&
+                            request.description.substr(0, 60)}... `}
+                        />
+                        <Tag color='green'>Active</Tag>
+                      </List.Item>
+                    );
+                  }
+                })}
+            </QueueAnim>
+
+            {focusedRequest.description !== '' ? (
+              <Row>
+                <Divider />
+                <Tag color='blue'>Email: {focusedRequest.email}</Tag>
+                <Tag color='blue'>Name: {focusedRequest.name}</Tag>
+                <Tag color='green'>
+                  {moment(focusedRequest.timestamp).format('MMM-DD-YYYY HH:mm')}
+                </Tag>
+                <br /> <br />
+                <h4>{focusedRequest.description}</h4>
+                {focusedRequest.downloadUrl && (
+                  <p
+                    style={{ cursor: 'pointer', marginBottom: 0 }}
+                    onClick={() => window.open(focusedRequest.downloadUrl)}
+                  >
+                    <Link to={'/dashboard/home'}>
+                      {' '}
+                      <Icon type='file-protect' /> Link to File
+                    </Link>
+                  </p>
+                )}
+              </Row>
+            ) : null}
+          </Card>
         </>
       )
     );

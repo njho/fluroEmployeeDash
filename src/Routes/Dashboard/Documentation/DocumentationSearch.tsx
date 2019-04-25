@@ -4,10 +4,11 @@ import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { withFirebase } from '../../../Firebase';
 import { compose } from 'recompose';
-import { IRootState, ICompanyInfo } from '../../../types/types';
+import { IRootState } from '../../../types/types';
 import { RouteComponentProps } from 'react-router';
 import { FormComponentProps } from 'antd/lib/form';
 import { InstantSearch, SearchBox, Hits } from 'react-instantsearch-dom';
+import CustomHits from './HitResult';
 
 /**
  * OwnProps is passed down from the Parent
@@ -18,7 +19,6 @@ interface OwnProps extends RouteComponentProps {}
  */
 interface StateProps {
   firebase: any;
-  companyInfo: ICompanyInfo;
 }
 /**
  * Dispatched Props from Redux
@@ -50,30 +50,14 @@ class DocumentationSearch extends Component<Props, State> {
             translations={{ placeholder: 'Search by Title or Description' }}
           />
           <br />
-          <Hits
-            hitComponent={(hit: any) => {
-              return (
-                <div
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => window.open(hit.hit.downloadUrl)}
-                >
-                  <h3> {hit.hit.title}</h3>
-                  <div className='disabled' style={{ fontSize: '0.8rem' }}>
-                    {hit.hit.description}
-                  </div>
-                </div>
-              );
-            }}
-          />
+          <CustomHits />
         </InstantSearch>
       </div>
     );
   }
 }
 
-const mapStateToProps = (state: IRootState): any => ({
-  companyInfo: state.company
-});
+const mapStateToProps = (state: IRootState): any => ({});
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({});
 

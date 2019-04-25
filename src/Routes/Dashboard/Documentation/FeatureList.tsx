@@ -9,8 +9,7 @@ import { Dispatch } from 'redux';
 import {
   IRootState,
   ICompanyInfo,
-  ICompanyCreditCard,
-  ICompanySubscription
+  ICompanyCreditCard
 } from '../../../types/types';
 import { IDoc } from '../../../types/firebaseTypes';
 import { RouteComponentProps } from 'react-router';

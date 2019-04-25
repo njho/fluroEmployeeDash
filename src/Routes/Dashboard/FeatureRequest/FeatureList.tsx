@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { List, Tag, Card } from 'antd';
+import { List, Tag, Card, Row, Divider } from 'antd';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import QueueAnim from 'rc-queue-anim';
@@ -101,7 +101,7 @@ class FeatureList extends Component<Props, State> {
     console.log(activeRequestCounts);
     return (
       activeRequestCounts > 0 && (
-        <>
+        <Card>
           <h2>Active Feature Requests</h2>
           <QueueAnim type={'left'} delay={[500, 0]}>
             {featureRequests.length > 0 &&
@@ -112,7 +112,7 @@ class FeatureList extends Component<Props, State> {
                       key={request.description}
                       onClick={() => this.setState({ focusedRequest: request })}
                       style={{ textAlign: 'left', cursor: 'pointer' }}
-                      className='fleet-list-item'
+                      className=''
                     >
                       <List.Item.Meta
                         title={`${request.description &&
@@ -124,17 +124,17 @@ class FeatureList extends Component<Props, State> {
                 }
               })}
           </QueueAnim>
-          <br />
           {focusedRequest.description !== '' ? (
-            <Card>
+            <Row>
+              <Divider />
               <Tag color='blue'>Email: {focusedRequest.email}</Tag>
               <Tag color='blue'>Name: {focusedRequest.name}</Tag>
               <br />
               <br />
               <h4>{focusedRequest.description}</h4>
-            </Card>
+            </Row>
           ) : null}
-        </>
+        </Card>
       )
     );
   }
