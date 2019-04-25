@@ -40,7 +40,7 @@ class SideMenu extends Component {
               </div>
             </Link>
             <div
-              onClick={() => window.open('https://github.com/Flurotech/')}
+              onClick={() => window.open('https://github.com/FluroTechLtd')}
               className='side-menu-item no-select'
             >
               <Icon type='github' /> Github
