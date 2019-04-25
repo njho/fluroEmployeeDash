@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, Icon } from 'antd';
+import { Row, Col } from 'antd';
 import './Public.scss';
 import QueueAnim from 'rc-queue-anim';
 import LoginContainer from './LoginContainer';

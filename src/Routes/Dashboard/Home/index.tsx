@@ -1,20 +1,25 @@
 import React, { Component } from 'react';
-import { Form, Button, Icon, Input, Upload, message, Row, Col } from 'antd';
+import {
+  Form,
+  Button,
+  Icon,
+  Input,
+  Upload,
+  message,
+  Row,
+  Col,
+  notification
+} from 'antd';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import QueueAnim from 'rc-queue-anim';
 
 import { withFirebase } from '../../../Firebase';
 import { Dispatch } from 'redux';
-import {
-  IRootState,
-  ICompanyInfo,
-  ICompanyCreditCard,
-  ICompanySubscription
-} from '../../../types/types';
-import { IDoc } from '../../../types/firebaseTypes';
+import { IRootState, ICompanyInfo } from '../../../types/types';
 import { RouteComponentProps } from 'react-router';
 import { FormComponentProps } from 'antd/lib/form';
+import BugList from './BugList';
 /**
  * OwnProps is passed down from the Parent
  */
@@ -58,7 +63,15 @@ const props = {
   }
 };
 
+const dummyRequest = ({ file, onSuccess }: any) => {
+  setTimeout(() => {
+    onSuccess('ok');
+  }, 0);
+};
+
 class HomeForm extends Component<Props, State> {
+  state = { data: { name: null }, uploading: false };
+
   async componentDidMount() {
     const { firebase, companyInfo } = this.props;
 
@@ -71,6 +84,23 @@ class HomeForm extends Component<Props, State> {
     }
   }
 
+  successNotification = (message: string) => {
+    notification.success({
+      message
+    });
+  };
+
+  loaderProps = {
+    accept: '.pdf, .doc,.docx, .png, .jpg, ',
+    data: (data: any) => {
+      console.log(data);
+      this.setState({ data: data });
+    },
+    customRequest: (thing: any) => dummyRequest(thing),
+    name: 'file',
+    showUploadList: false
+  };
+
   handleSubmit = (e: any) => {
     const { firebase, history } = this.props;
     e.preventDefault();
@@ -79,12 +109,73 @@ class HomeForm extends Component<Props, State> {
     validateFields(async (err, values) => {
       if (!err) {
         try {
-          console.log('in the try');
-          await firebase.doSignInWithEmailAndPassword(
-            values.userName,
-            values.password
-          );
-          history.push('/dashboard/home');
+          this.setState({ uploading: true });
+          const { firebase } = this.props;
+          const { data } = this.state;
+          let url: string;
+
+          if (data.name) {
+            let uploadTask = firebase
+              .storageAccess()
+              .ref(`/features/${data.name}`)
+              .put(data);
+
+            uploadTask.on(
+              'state_changed',
+              function(snapshot: any) {
+                var progress =
+                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                  case 'paused': // or 'paused'
+                    console.log('Upload is paused');
+                    break;
+                  case 'running': // or 'running'
+                    console.log('Upload is running');
+                    break;
+                }
+              },
+              function(error: any) {
+                // Handle unsuccessful uploads
+              },
+              async () => {
+                uploadTask.snapshot.ref
+                  .getDownloadURL()
+                  .then(async (downloadUrl: string) => {
+                    url: downloadUrl;
+                    console.log('File available at', downloadUrl);
+                    await firebase
+                      .firestoreAccess()
+                      .collection('bugReports')
+                      .add({
+                        name: values.name,
+                        email: values.email,
+                        description: values.description,
+                        timestamp: Date.now(),
+                        downloadUrl,
+                        active: true
+                      });
+                    this.successNotification('Document successfully uploaded!');
+                    form.resetFields();
+                    this.setState({ data: { name: null }, uploading: false });
+                  });
+              }
+            );
+          } else {
+            await firebase
+              .firestoreAccess()
+              .collection('bugReports')
+              .add({
+                name: values.name,
+                email: values.email,
+                description: values.description,
+                timestamp: Date.now(),
+                downloadUrl: null
+              });
+            this.successNotification('Successfully submitted bug report!');
+            form.resetFields();
+            this.setState({ data: { name: null }, uploading: false });
+          }
         } catch (error) {
           console.log(error);
         }
@@ -95,6 +186,7 @@ class HomeForm extends Component<Props, State> {
   render() {
     const { form } = this.props;
     const { getFieldDecorator } = form;
+    const { data, uploading } = this.state;
 
     return (
       <div className='home-container'>
@@ -133,24 +225,25 @@ class HomeForm extends Component<Props, State> {
               </Col>
             </Row>
             <Form.Item label='Please describe the issue'>
-              <TextArea
-                rows={4}
-                placeholder='How did this occur? What events lead to the bug?'
-              />
+              {getFieldDecorator('description', {
+                rules: [
+                  { required: true, message: 'Please provide your email!' }
+                ]
+              })(
+                <TextArea
+                  rows={4}
+                  placeholder='How did this occur? What events lead to the bug?'
+                />
+              )}
             </Form.Item>
-            <Dragger {...props}>
+            <Dragger {...this.loaderProps}>
               <p className='ant-upload-drag-icon'>
-                <Icon type='inbox' />
+                <Icon type='file-protect' /> {data.name}
               </p>
               <p className='ant-upload-text'>
                 Click or drag file to this area to upload
               </p>
-              <p className='ant-upload-hint'>
-                Support for a single or bulk upload. Strictly prohibit from
-                uploading company data or other band files
-              </p>
             </Dragger>
-            ,
             <Form.Item
               style={{ textAlign: 'right', width: '100%', marginTop: '20px' }}
             >
@@ -159,6 +252,7 @@ class HomeForm extends Component<Props, State> {
                 type='primary'
                 size='large'
                 htmlType='submit'
+                loading={uploading}
               >
                 <Icon type='security-scan' />
                 Submit Report
@@ -167,6 +261,11 @@ class HomeForm extends Component<Props, State> {
             </Form.Item>
           </QueueAnim>
         </Form>
+        <Row>
+          <Col span={24}>
+            <BugList />
+          </Col>
+        </Row>
       </div>
     );
   }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { List, Tag, Card } from 'antd';
+import { List, Tag, Card, Icon } from 'antd';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import QueueAnim from 'rc-queue-anim';
@@ -9,7 +9,7 @@ import { Dispatch } from 'redux';
 import { IRootState, ICompanyInfo } from '../../../types/types';
 import { RouteComponentProps } from 'react-router';
 import { FormComponentProps } from 'antd/lib/form';
-import Item from 'antd/lib/list/Item';
+import moment from 'moment';
 
 /**
  * OwnProps is passed down from the Parent
@@ -30,44 +30,52 @@ interface DispatchProps {}
  * Local State
  */
 interface State {
-  featureRequests: any[];
+  bugReports: any[];
   activeRequestCounts: number;
-  focusedRequest: { description: string; email: string; name: string };
+  focusedRequest: {
+    description: string;
+    email: string;
+    name: string;
+    downloadUrl: string;
+    timestamp: string;
+  };
 }
 /**
  * Combined props
  */
 type Props = OwnProps & DispatchProps & StateProps & FormComponentProps;
 
-class FeatureList extends Component<Props, State> {
+class BugList extends Component<Props, State> {
   state = {
-    featureRequests: [],
+    bugReports: [],
     activeRequestCounts: 0,
     focusedRequest: {
       name: '',
       email: '',
-      description: ''
+      description: '',
+      downloadUrl: '',
+      timestamp: ''
     }
   };
 
   async componentDidMount() {
-    const { firebase, companyInfo } = this.props;
+    const { firebase } = this.props;
 
     //@ts-ignore
     this.listenerRef = firebase
       .firestoreAccess()
-      .collection('featureRequests')
+      .collection('bugReports')
       .onSnapshot((querySnapshot: any) => {
-        let featureRequests: any[] = [];
+        let bugReports: any[] = [];
         let activeRequestCounts = 0;
         querySnapshot.forEach((doc: any) => {
-          featureRequests.push(doc.data());
+          bugReports.push(doc.data());
           if (doc.data().active) {
             activeRequestCounts += 1;
           }
         });
         this.setState({
-          featureRequests,
+          bugReports,
           activeRequestCounts
         });
       });
@@ -97,15 +105,14 @@ class FeatureList extends Component<Props, State> {
   };
 
   render() {
-    const { featureRequests, activeRequestCounts, focusedRequest } = this.state;
-    console.log(activeRequestCounts);
+    const { bugReports, activeRequestCounts, focusedRequest } = this.state;
     return (
       activeRequestCounts > 0 && (
         <>
-          <h2>Active Feature Requests</h2>
+          <h2>Active Bugs</h2>
           <QueueAnim type={'left'} delay={[500, 0]}>
-            {featureRequests.length > 0 &&
-              featureRequests.map((request: any) => {
+            {bugReports.length > 0 &&
+              bugReports.map((request: any) => {
                 if (request.active) {
                   return (
                     <List.Item
@@ -129,9 +136,19 @@ class FeatureList extends Component<Props, State> {
             <Card>
               <Tag color='blue'>Email: {focusedRequest.email}</Tag>
               <Tag color='blue'>Name: {focusedRequest.name}</Tag>
-              <br />
-              <br />
+              <Tag color='green'>
+                {moment(focusedRequest.timestamp).format('MMM-DD-YYYY HH:mm')}
+              </Tag>
+              <br /> <br />
               <h4>{focusedRequest.description}</h4>
+              {focusedRequest.downloadUrl && (
+                <p
+                  style={{ cursor: 'pointer', marginBottom: 0 }}
+                  onClick={() => window.open(focusedRequest.downloadUrl)}
+                >
+                  <Icon type='file-protect' /> File Uploaded
+                </p>
+              )}
             </Card>
           ) : null}
         </>
@@ -152,4 +169,4 @@ export default compose<any, any>(
     mapDispatchToProps
   ),
   withFirebase
-)(FeatureList);
+)(BugList);

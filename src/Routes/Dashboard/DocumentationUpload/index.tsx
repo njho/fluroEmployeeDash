@@ -112,7 +112,7 @@ class HomeForm extends Component<Props, State> {
           let url: string;
           let uploadTask = firebase
             .storageAccess()
-            .ref(`/${data.name}`)
+            .ref(`/documents/${data.name}`)
             .put(data);
 
           uploadTask.on(
